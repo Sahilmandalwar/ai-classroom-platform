@@ -40,7 +40,7 @@ const signup = async(req, res) => {
 
 const login = async(req, res) => {
     try{
-        const {name, email, password} = req.body;
+        const {email, password} = req.body;
 
         const user = await User.findOne({email});
 
@@ -50,7 +50,7 @@ const login = async(req, res) => {
             })
         }
 
-        const isMatch = bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
 
         if(!isMatch) {
              return res.status(400).json({
@@ -64,7 +64,7 @@ const login = async(req, res) => {
         )
 
         res.status(200).json({
-            token, user
+             user, token
         })
 
 
