@@ -14,7 +14,11 @@ const userSchema = new mongoose.Schema({
         type: String, 
         required: true,
     },
-    timestamps : true,
-})
+},
+    {
+        timestamps : true,
+    },
+    
+)
 
-export default moonges.model("user", userSchema);
+export default mongoose.model("user", userSchema);
