@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API from "../services/api";
+import {loginUser} from "../services/authServices";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -21,9 +21,9 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await API.post("/auth/login", formData);
-      localStorage.setItem("token", res.data.token);
-      navigate("/");
+      const res = await loginUser(formData);
+      localStorage.setItem("token", res.token);
+      navigate("/home");
       alert("Login Successful");
     } catch (error) {
       alert(error.response?.data?.message || "Something went wrong.");
