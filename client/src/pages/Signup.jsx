@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import {signUpUser} from "../services/authServices";
+import { signUpUser } from "../services/authServices.js";
+import { useAuth } from "../contexts/authContext.jsx";
 
 function Signup() {
   const navigate = useNavigate();
-
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,9 +24,9 @@ function Signup() {
 
     try {
       const res = await signUpUser(formData);
-      localStorage.setItem("token", res.token);
+      login(res.token);
       alert("Signup Successful");
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       alert(
         error.response?.data?.message || "Something went wrong during signup.",
