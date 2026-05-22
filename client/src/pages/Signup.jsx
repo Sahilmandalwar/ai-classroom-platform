@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import API from "../services/api";
+import {signUpUser} from "../services/authServices";
 
 function Signup() {
   const navigate = useNavigate();
@@ -22,8 +22,8 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const res = await API.post("/auth/signup", formData);
-      localStorage.setItem("token", res.data.token);
+      const res = await signUpUser(formData);
+      localStorage.setItem("token", res.token);
       alert("Signup Successful");
       navigate("/");
     } catch (error) {
