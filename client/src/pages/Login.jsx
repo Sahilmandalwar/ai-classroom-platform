@@ -1,12 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {loginUser} from "../services/authServices";
+import {loginUser} from "../services/authServices.js";
+import { useAuth } from "../contexts/authContext.jsx";
+
+
+
 
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+   const { login } = useAuth();
 
   const navigate = useNavigate();
 
@@ -17,13 +23,16 @@ function Login() {
     });
   };
 
+ 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
       const res = await loginUser(formData);
-      localStorage.setItem("token", res.token);
-      navigate("/home");
+      
+      login(res.token);
+      navigate("/dashboard");
       alert("Login Successful");
     } catch (error) {
       alert(error.response?.data?.message || "Something went wrong.");
