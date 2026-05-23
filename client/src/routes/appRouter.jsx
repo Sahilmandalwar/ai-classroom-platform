@@ -8,9 +8,12 @@ import ProtectedRoute from "../components/protectedRoute.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
-    children: [
+    element: (
+      
+        <MainLayout />
      
+    ),
+    children: [
       {
         path: "/login",
         element: <Login />,
