@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/authContext.jsx";
 
 function Signup() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, storeUser} = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,6 +24,7 @@ function Signup() {
 
     try {
       const res = await signUpUser(formData);
+      storeUser(res.user._id);
       login(res.token);
       alert("Signup Successful");
       navigate("/dashboard");

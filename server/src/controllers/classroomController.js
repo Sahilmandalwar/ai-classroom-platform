@@ -93,3 +93,35 @@ export const getMyClassroom = async(req, res) => {
     }
 }
 
+export const fetchClassroom = async(req,res)=>{
+    
+    try{
+        const {classId} = req.params;
+        const classroom = await Classroom.findOne({
+            _id : classId,
+            $or : [
+                {teacher : req.user.id},
+                {students : req.user.id},
+            ]
+        }).populate("teacher","name email");
+        
+        if(!classroom) {
+            return res.status(400).json({
+                message : "specified classroom not found",
+            })
+        }
+       
+        res.status(200).json({
+            message: "Classroom information fetched successfully",
+            classroom
+        })
+
+
+    }catch(error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Server Error",
+        });
+    }
+}
+

@@ -14,3 +14,8 @@ export const joinClassroom = async(classCode)=>{
     const response = await API.post("/classroom/join", classCode);
     return response.data;
 }
+
+export const fetchClass = async(classId) =>{
+    const response = await API.get(`/classroom/${classId}`);
+    return response.data;
+}

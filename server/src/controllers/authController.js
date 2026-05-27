@@ -42,7 +42,7 @@ const login = async(req, res) => {
     try{
         const {email, password} = req.body;
 
-        const user = await User.findOne({email});
+        const user = await User.findOne({email}).select("+password");
 
         if(!user) {
             return res.status(400).json({
@@ -75,4 +75,13 @@ const login = async(req, res) => {
     }
 }
 
-export {signup, login};
+const fetchCurrentUser = async(req, res) => {
+
+    const user = await User.findById(req.user.id);
+    res.status(200).json({
+        message : "User Detail fetch successfully",
+        user
+    })
+}
+
+export {signup, login, fetchCurrentUser};

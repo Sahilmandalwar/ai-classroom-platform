@@ -12,7 +12,7 @@ function Login() {
     password: "",
   });
 
-   const { login } = useAuth();
+   const { login, storeUser } = useAuth();
 
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ function Login() {
 
     try {
       const res = await loginUser(formData);
-      
+      storeUser(res.user._id);
       login(res.token);
       navigate("/dashboard");
       alert("Login Successful");

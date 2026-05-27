@@ -1,14 +1,11 @@
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
-  getMyClassrooms,
   createClassroom,
   joinClassroom,
-} from "../services/classroomServices.js";
+} from "../../services/classroomServices.js";
 
 const Dashboard = () => {
-  const [classrooms, setClassrooms] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -17,33 +14,18 @@ const Dashboard = () => {
   const [joinCode, setJoinCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
 
-  useEffect(() => {
-    const fetchClassrooms = async () => {
-      try {
-        const data = await getMyClassrooms();
-        setClassrooms(data.classrooms || []);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchClassrooms();
-  }, []);
-
   const handleCreateClassroom = async (e) => {
     e.preventDefault();
     if (!title.trim()) return;
 
     setIsSubmitting(true);
     try {
-      const data = await createClassroom({
+      await createClassroom({
         title,
         description,
       });
 
-      setClassrooms([...classrooms, data.classroom]);
+     
       setTitle("");
       setDescription("");
     } catch (error) {
@@ -59,8 +41,8 @@ const Dashboard = () => {
 
     setIsJoining(true);
     try {
-      const data = await joinClassroom({"classCode":joinCode});
-      setClassrooms([...classrooms, data.classroom]);
+      await joinClassroom({ classCode: joinCode });
+    
       setJoinCode("");
     } catch (error) {
       console.log(error);
@@ -70,7 +52,7 @@ const Dashboard = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gray-900 p-4 md:p-8 font-sans antialiased text-gray-100">
+    <main className="min-h-screen bg-slate-950 p-4 md:p-8 font-sans antialiased text-gray-100">
       <div className="max-w-7xl mx-auto">
         {/* Page Level: H1 */}
         <header className="mb-10 border-b border-gray-800 pb-4">
@@ -146,62 +128,6 @@ const Dashboard = () => {
               </button>
             </form>
           </div>
-        </section>
-
-        {/* Section 2: Active Classrooms Grid */}
-        <section>
-          <div className="mb-6 border-b border-gray-800 pb-3">
-            <h2 className="text-xl font-medium text-white">
-              Active Classrooms
-            </h2>
-          </div>
-
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((n) => (
-                <div
-                  key={n}
-                  className="bg-gray-800 border border-gray-700 rounded-xl p-6 h-44 animate-pulse shadow-md"
-                >
-                  <div className="h-5 bg-gray-700 rounded w-2/3 mb-4"></div>
-                  <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
-                  <div className="h-4 bg-gray-700 rounded w-4/5"></div>
-                </div>
-              ))}
-            </div>
-          ) : classrooms.length === 0 ? (
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-12 text-center border-dashed">
-              <p className="text-gray-400 text-sm">No classrooms available.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {classrooms.map((classroom) => (
-                <article
-                  key={classroom._id}
-                  // True Card Styling: Added shadows, transform (lift), and smooth transitions
-                  className="group bg-gray-800 border border-gray-700 rounded-xl p-6 flex flex-col shadow-md hover:-translate-y-1.5 hover:shadow-xl hover:shadow-black/20 hover:border-gray-500 transition-all duration-300 ease-out cursor-pointer"
-                >
-                  <div className="grow">
-                    <h3 className="text-lg font-medium capitalize text-gray-100 group-hover:text-white transition-colors mb-2">
-                      {classroom.title}
-                    </h3>
-                    <p className="text-gray-400 text-sm mb-6 line-clamp-2">
-                      {classroom.description || "No description provided."}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-gray-700 mt-auto flex items-center justify-between">
-                    <span className="text-xs font-medium text-gray-500 tracking-wide uppercase">
-                      Class Code
-                    </span>
-                    <span className="font-mono text-sm text-gray-300 bg-gray-900 px-2 py-1 rounded border border-gray-700 select-all">
-                      {classroom.classCode}
-                    </span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
         </section>
       </div>
     </main>
